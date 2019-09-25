@@ -76,3 +76,35 @@ table {
 	background: #fff;
 	left:145px;
 }
+
+.start {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	margin: 0;
+	padding: 2rem 0;
+	text-align: center;
+	z-index: 999;
+	color: #fff;
+	font-size: 1,5rem;
+	background: black;
+	cursor: pointer;
+	font-family: sans-serif;
+	font-weight: 700;
+}
+
+.score {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	background: black;
+	padding: 1rem 0;
+	z-index: 999;
+	font-size: 1,5rem;
+	color: skyblue;
+	text-align: center;
+	font-family: sans-serif;
+	font-weight: 700;
+}
