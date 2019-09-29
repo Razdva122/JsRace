@@ -62,9 +62,9 @@ table {
 
 .gameArea{
 	width: 300px;
-	height: 100%;
-	position: relative;
+	height: 100vh;
 	margin: auto;
+	position: relative;
 	background: #222;
 	overflow: hidden;
 }
@@ -107,4 +107,30 @@ table {
 	text-align: center;
 	font-family: sans-serif;
 	font-weight: 700;
+}
+
+.records {
+	position: absolute;
+	top: 50vh;
+	margin-top: -100px;
+	left: 50vh;
+	margin-left: -150px;
+	height: 200px;
+	width: 200px;
+	background: green;
+}
+
+.record{
+  display: flex;
+  justify-content: space-between;
+}
+
+.name{
+  width: 150px;
+}
+
+.name p{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

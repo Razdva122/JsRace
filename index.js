@@ -2,10 +2,7 @@ const score = document.querySelector('.score');
 const start = document.querySelector('.start');
 const gameArea = document.querySelector('.gameArea');
 const car = document.createElement('div');
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.game').style.height = `${document.documentElement.clientHeight}px`;
-});
+const recordsEl = document.querySelector('.records');
 
 car.classList.add('car');
 
@@ -19,24 +16,78 @@ const keys = {
 const settings = {
   start: false,
   score: 0,
-  speed: 3,
+  speed: 10,
   traffic: 3,
   heightStreap: 75,
   heightCar: 100,
 };
 
+const updateRecord = () => {
+  if (localStorage.getItem('records')) {
+    const records = JSON.parse(localStorage.getItem('records'));
+    recordsEl.innerHTML = '';
+    records.forEach((record) => {
+      recordsEl.innerHTML += `
+        <div class="record">
+          <div class="name">
+            <p>
+              ${record.name}
+            </p>
+          </div>
+          <div class="points">
+             ${record.result}
+          </div>
+        </div>`;
+    });
+  }
+};
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateRecord();
+  const records = document.querySelector('.records');
+  records.style.left = `${document.documentElement.clientWidth * 0.5 - 200}px`;
+});
+
+window.addEventListener('resize', () => {
+  const records = document.querySelector('.records');
+  records.style.left = `${document.documentElement.clientWidth * 0.5 - 200}px`;
+});
+
 const moveRoad = () => {
   const lines = document.querySelectorAll('.line');
   lines.forEach((line) => {
-    if (line.y < 0 && line.y % settings.heightStreap === -settings.speed) {
-      line.y = -settings.heightStreap;
-    } else if (line.y % settings.heightStreap === settings.heightStreap - settings.speed) {
-      line.y = Math.floor(line.y / settings.heightStreap) * settings.heightStreap;
+    const amountOfMoves = Math.floor(settings.heightStreap / settings.speed);
+    const height = settings.heightStreap;
+    if (line.y < 0 && line.y % height === -(height - amountOfMoves * settings.speed)) {
+      line.y = -height;
+    } else if (line.y % height === amountOfMoves * settings.speed) {
+      line.y = Math.floor(line.y / height) * height;
     } else {
       line.y += settings.speed;
     }
     line.style.top = `${line.y}px`;
   });
+};
+
+const saveRecord = (result) => {
+  if (localStorage.getItem('records')) {
+    const records = JSON.parse(localStorage.getItem('records'));
+    if (records.length < 10 || records[9].result < result) {
+      const name = prompt('Введите ваше имя.');
+      records.push({ name, result });
+    }
+    records.sort((a, b) => b.result - a.result);
+    if (records.length > 10) {
+      records.length = 10;
+    }
+    localStorage.setItem('records', JSON.stringify(records));
+    updateRecord();
+  } else {
+    const name = prompt('Введите ваше имя.');
+    localStorage.setItem('records', JSON.stringify([{ name, result }]));
+    updateRecord();
+  }
 };
 
 const moveEnemy = () => {
@@ -52,6 +103,7 @@ const moveEnemy = () => {
       settings.start = false;
       start.classList.remove('hide');
       start.style.top = `${score.offsetHeight}px`;
+      saveRecord(settings.score);
     }
 
     item.y += settings.speed / 2;
